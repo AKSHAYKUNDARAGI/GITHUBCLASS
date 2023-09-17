@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: left;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .c-cnt {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .c-wrap {
+            margin: 30px; /* Adjusted margin for spacing between calendars */
+        }
+
+        .calendar {
+            background-color: #4CAF50; /* Green color */
+            border: 1px solid #ccc;
+            border-radius: 1px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        .month {
+            text-align: center;
+            background-color: #45A049; /* Darker green for month headers */
+            color: #fff;
+            padding: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            font-family: 'Verdana', sans-serif;
+            white-space: nowrap; /* Prevent month names from wrapping */
+            overflow: hidden; /* Hide overflow if month name is too long */
+            text-overflow: ellipsis; /* Show ellipsis for long month names */
+            border: 1px  #45A049; /* Thin border for month headers */
+        }
+
+        .ds {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            padding: 0 10px; /* Adjusted padding for spacing */
+        }
+
+        .d {
+            text-align: center;
+            padding: 5px;
+            border: 1px #ccc;
+            font-size: 16px;
+            background-color: #E7F0E9; /* Lighter green for d cells */
+            color: #333;
+            font-family: 'Tahoma', sans-serif;
+        }
+
+        .d-header {
+            font-weight: bold;
+            color: #45A049; /* Darker green for d headers */
+            font-family: 'Arial', sans-serif;
+        }
+
+        @media screen and (max-width: 600px) {
+            .calendar {
+                width: 100%;
+            }
+            .d {
+                font-size: 12px;
+                padding: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="c-cnt">
+        <script>
+            const mnts = [
+                { name: "January", ds: 31 },
+                { name: "February", ds: 28 }, // Leap year not considered for simplicity
+                { name: "March", ds: 31 },
+                { name: "April", ds: 30 },
+                { name: "May", ds: 31 },
+                { name: "June", ds: 30 },
+                { name: "July", ds: 31 },
+                { name: "August", ds: 31 },
+                { name: "September", ds: 30 },
+                { name: "October", ds: 31 },
+                { name: "November", ds: 30 },
+                { name: "December", ds: 31 },
+            ];
+
+            for (const m of mnts) {
+                document.write('<div class="c-wrap">'); // Added a wrapper
+                document.write('<div class="calendar">');
+                document.write(`<div class="month">${m.name}</div>`);
+                document.write('<div class="ds">');
+                document.write('<div class="d d-header">Sun</div>');
+                document.write('<div class="d d-header">Mon</div>');
+                document.write('<div class="d d-header">Tue</div>');
+                document.write('<div class="d d-header">Wed</div>');
+                document.write('<div class="d d-header">Thu</div>');
+                document.write('<div class="d d-header">Fri</div>');
+                document.write('<div class="d d-header">Sat</div>');
+
+                // Fill in the ds of the month
+                for (let d = 1; d <= m.ds; d++) {
+                    document.write(`<div class="d">${d}</div>`);
+                }
+
+                document.write('</div>');
+                document.write('</div>');
+                document.write('</div>'); // Close the wrapper
+            }
+        </script>
+    </div>
+</body>
+</html>
