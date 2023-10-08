@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    function sudokuValid(board) {
+    
+    function havingDuplicates(array1) {
+        const set = new Set();
+        for (const val of array1) {
+            if (val !== "." && set.has(val)) {
+                return true;
+            }
+            set.add(val);
+        }
+        return false;
+    }
+
+    
+    for (let i = 0; i < 9; i++) {
+        if (havingDuplicates(board[i])) {
+            return false;
+        }
+    }
+
+    
+    for (let j = 0; j < 9; j++) {
+        const col = [];
+        for (let i = 0; i < 9; i++) {
+            col.push(board[i][j]);
+        }
+        if (havingDuplicates(col)) {
+            return false;
+        }
+    }
+
+    
+    for (let i = 0; i < 9; i += 3) {
+        for (let j = 0; j < 9; j += 3) {
+            const subgrid = [];
+            for (let x = i; x < i + 3; x++) {
+                for (let y = j; y < j + 3; y++) {
+                    subgrid.push(board[x][y]);
+                }
+            }
+            if (havingDuplicates(subgrid)) {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+
+const board = [
+    ["5","3",".",".","7",".",".",".","."],
+    ["6",".",".","1","9","5",".",".","."],
+    [".","9","8",".",".",".",".","6","."],
+    ["8",".",".",".","6",".",".",".","3"],
+    ["4",".",".","8",".","3",".",".","1"],
+    ["7",".",".",".","2",".",".",".","6"],
+    [".","6",".",".",".",".","2","8","."],
+    [".",".",".","4","1","9",".",".","5"],
+    [".",".",".",".","8",".",".","7","9"]
+];
+
+console.log(sudokuValid(board));
+
+  </script>
+</body>
+</html>

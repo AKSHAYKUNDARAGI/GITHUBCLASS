@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BILLING AMONTS</title>
+</head>
+<body> 
+<script>
+const customers = [
+    { idCustom: 1, nameOfTheCustom: 'akshay', billingAmountInTotal: 3500 },
+    { idCustom: 2, nameOfTheCustom: 'vishwa', billingAmountInTotal: 2200 },
+    { idCustom: 3, nameOfTheCustom: 'vicky', billingAmountInTotal: 3600 },
+    { idCustom: 4, nameOfTheCustom: 'arijit', billingAmountInTotal: 3500 },
+];
+
+
+const highSpendingCustomers = customers.filter(customer => customer.billingAmountInTotal > 3000);
+
+
+highSpendingCustomers.forEach(customer => {
+    console.log(`Customer Name: ${customer.nameOfTheCustom}`);
+    console.log(`Customer ID: ${customer.idCustom}`);
+    console.log(`Total Billing Amount: Rs. ${customer.billingAmountInTotal}`);
+    console.log('-------------------------');
+});
+
+  </script>
+  </body>
+</html>
