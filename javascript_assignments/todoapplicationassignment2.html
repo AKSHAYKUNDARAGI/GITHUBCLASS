@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .todo-app {
+            margin: 50px auto;
+            width: 300px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            font-size: 14px;
+            margin: 5px 0;
+        }
+
+        .task {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            padding: 5px;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+        }
+
+        .task-actions {
+            display: flex;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            background-color: #d1ffd1;
+        }
+    </style>
+</head>
+<body>
+    <div class="todo-app">
+        <h1>Todo List</h1>
+        <input id="task-input" type="text" placeholder="Add a new task">
+        <button id="add-button">Add Task</button>
+        <div id="task-list">
+      
+        </div>
+        <div>
+            <p>Total tasks added: <span id="total-tasks">0</span></p>
+            <p>Total tasks completed: <span id="total-completed">0</span></p>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const taskInput = document.getElementById("task-input");
+            const addButton = document.getElementById("add-button");
+            const taskList = document.getElementById("task-list");
+            const totalTasksDisplay = document.getElementById("total-tasks");
+            const totalCompletedDisplay = document.getElementById("total-completed");
+
+            let tasks = [];
+
+            addButton.addEventListener("click", function () {
+                const taskText = taskInput.value.trim();
+                if (taskText === "") {
+                    alert("Please enter a task.");
+                    return;
+                }
+
+                tasks.push({ text: taskText, completed: false });
+                updateTaskList();
+                taskInput.value = "";
+            });
+
+            function updateTaskList() {
+                taskList.innerHTML = "";
+                tasks.forEach(function (task, index) {
+                    const taskItem = document.createElement("div");
+                    taskItem.classList.add("task");
+                    if (task.completed) {
+                        taskItem.classList.add("completed");
+                    }
+                    taskItem.innerHTML = `
+                        <span>${task.text}</span>
+                        <div class="task-actions">
+                            <button onclick="completeTask(${index})">Complete</button>
+                            <button onclick="deleteTask(${index})">Delete</button>
+                        </div>
+                    `;
+                    taskList.appendChild(taskItem);
+                });
+                updateTotalTasks();
+                updateTotalCompleted();
+            }
+
+            function completeTask(index) {
+                tasks[index].completed = true;
+                updateTaskList();
+            }
+
+            function deleteTask(index) {
+                tasks.splice(index, 1);
+                updateTaskList();
+                updateTotalTasks();
+                updateTotalCompleted();
+            }
+
+            function updateTotalTasks() {
+                totalTasksDisplay.textContent = tasks.length;
+            }
+
+            function updateTotalCompleted() {
+                const completedTasks = tasks.filter((task) => task.completed);
+                totalCompletedDisplay.textContent = completedTasks.length;
+            }
+        });
+    </script>
+</body>
+</html>

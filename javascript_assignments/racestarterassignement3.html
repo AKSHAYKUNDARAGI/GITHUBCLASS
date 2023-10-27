@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Race Starter</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+
+        .countdown {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 20px;
+            color: #007BFF;
+        }
+
+        .gomessage {
+            font-size: 36px;
+            color: #00cc00;
+            display: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="countdown" id="countdown">5</div>
+    <div class="gomessage" id="gomessage">Go</div>
+    <button id="start-button" onclick="startCountdown()">Start Race</button>
+    <button id="replay-button" onclick="replayCountdown()" disabled>Replay</button>
+    <script>
+        let countdown = 5;
+        let countdownInterval;
+
+        function startCountdown() {
+            const countdownDisplay = document.getElementById("countdown");
+            const goMessage = document.getElementById("go-message");
+            const startButton = document.getElementById("start-button");
+            const replayButton = document.getElementById("replay-button");
+
+            startButton.disabled = true;
+            replayButton.disabled = true;
+            countdownDisplay.style.display = "block";
+
+            countdownInterval = setInterval(function () {
+                countdown--;
+                countdownDisplay.innerHTML = countdown;
+
+                if (countdown === 1) {
+                    countdownDisplay.style.display = "none";
+                    goMessage.style.display = "block";
+                }
+
+                if (countdown === 0) {
+                    clearInterval(countdownInterval);
+                    replayButton.disabled = false;
+                }
+            }, 1000);
+        }
+
+        function replayCountdown() {
+            const countdownDisplay = document.getElementById("countdown");
+            const goMessage = document.getElementById("go-message");
+            const startButton = document.getElementById("start-button");
+            const replayButton = document.getElementById("replay-button");
+
+            countdown = 5;
+            countdownDisplay.style.display = "block";
+            goMessage.style.display = "none";
+            countdownDisplay.innerHTML = countdown;
+            startButton.disabled = false;
+            replayButton.disabled = true;
+        }
+    </script>
+</body>
+</html>
