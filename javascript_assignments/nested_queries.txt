@@ -1,0 +1,214 @@
+1.SELECT
+    c.class_id,
+    c.class_name,
+    s.student_id,
+    st.student_name,
+    MAX(sc.score) AS highest_science_score
+FROM
+    Classes c
+JOIN
+    Students st ON c.class_id = st.class_id
+JOIN
+    Scores sc ON st.student_id = sc.student_id
+WHERE
+    sc.subject = 'Science'
+GROUP BY
+    c.class_id, st.student_id
+
+2.SELECT
+    st.student_name
+FROM
+    Students st
+JOIN
+    Scores sc_math ON st.student_id = sc_math.student_id AND sc_math.subject = 'Math'
+JOIN
+    (
+        SELECT
+            student_id,
+            AVG(score) AS avg_science_score
+        FROM
+            Scores
+        WHERE
+            subject = 'Science'
+        GROUP BY
+            student_id
+    ) AS avg_science ON st.student_id = avg_science.student_id
+WHERE
+    sc_math.score < avg_science.avg_science_score
+
+3.WITH HighScorers AS (
+    SELECT
+        st.class_id,
+        COUNT(*) AS num_high_scorers
+    FROM
+        Students st
+    JOIN
+        Scores sc ON st.student_id = sc.student_id
+    WHERE
+        sc.score > 80
+    GROUP BY
+        st.class_id
+)
+SELECT
+    c.class_id,
+    c.class_name,
+    COALESCE(hs.num_high_scorers, 0) AS num_high_scorers
+FROM
+    Classes c
+LEFT JOIN
+    HighScorers hs ON c.class_id = hs.class_id
+WHERE
+    hs.num_high_scorers = (
+        SELECT
+            MAX(num_high_scorers)
+        FROM
+            HighScorers
+    );
+4.WITH MaxScores AS (
+    SELECT
+        subject,
+        MAX(score) AS max_score
+    FROM
+        Scores
+    GROUP BY
+        subject
+)
+SELECT
+    s.student_id,
+    s.student_name,
+    sc.subject,
+    sc.score
+FROM
+    Students s
+JOIN
+    Scores sc ON s.student_id = sc.student_id
+JOIN
+    MaxScores ms ON sc.subject = ms.subject AND sc.score = ms.max_score;
+
+5.SELECT
+    st.student_name
+FROM
+    Students st
+JOIN
+    Scores sc ON st.student_id = sc.student_id
+JOIN
+    (
+        SELECT
+            class_id,
+            AVG(score) AS avg_score
+        FROM
+            Scores
+        GROUP BY
+            class_id
+    ) AS avg_scores ON st.class_id = avg_scores.class_id
+WHERE
+    sc.score > avg_scores.avg_score;
+
+6.WITH ClassAvgAge AS (
+    SELECT
+        st.class_id,
+        AVG(st.age) AS avg_class_age
+    FROM
+        Students st
+    GROUP BY
+        st.class_id
+),
+OverallAvgAge AS (
+    SELECT
+        AVG(age) AS avg_all_students_age
+    FROM
+        Students
+)
+SELECT
+    caa.class_id,
+    caa.avg_class_age
+FROM
+    ClassAvgAge caa
+JOIN
+    OverallAvgAge oaa ON caa.avg_class_age > oaa.avg_all_students_age;
+7.SELECT
+    st.student_name,
+    SUM(sc.score) AS total_score
+FROM
+    Students st
+JOIN
+    Scores sc ON st.student_id = sc.student_id
+GROUP BY
+    st.student_id, st.student_name
+ORDER BY
+    total_score DESC;
+8.WITH ClassAvgScores AS (
+    SELECT
+        st.class_id,
+        AVG(sc.score) AS avg_class_score
+    FROM
+        Students st
+    JOIN
+        Scores sc ON st.student_id = sc.student_id
+    GROUP BY
+        st.class_id
+),
+LowestAvgClass AS (
+    SELECT
+        class_id
+    FROM
+        ClassAvgScores
+    ORDER BY
+        avg_class_score ASC
+    LIMIT 1
+)
+SELECT
+    st.student_id,
+    st.student_name,
+    sc.score
+FROM
+    Students st
+JOIN
+    Scores sc ON st.student_id = sc.student_id
+JOIN
+    LowestAvgClass lac ON st.class_id = lac.class_id
+ORDER BY
+    sc.score DESC
+LIMIT 1;
+
+9.SELECT DISTINCT
+    st.student_name
+FROM
+    Students st
+JOIN
+    Scores sc_alice ON st.student_id <> 1 -- Exclude Alice
+    AND st.class_id = (SELECT class_id FROM Students WHERE student_id = 1) -- Alice's class
+    AND st.student_id = sc_alice.student_id
+JOIN
+    Scores sc_alice_subject ON sc_alice.subject = sc_alice_subject.subject
+    AND sc_alice_subject.student_id = 1 -- Alice's student_id
+WHERE
+    sc_alice.score = sc_alice_subject.score;
+
+10.WITH ClassAvgScores AS (
+    SELECT
+        st.class_id,
+        AVG(sc.score) AS avg_class_score
+    FROM
+        Students st
+    JOIN
+        Scores sc ON st.student_id = sc.student_id
+    GROUP BY
+        st.class_id
+)
+SELECT
+    c.class_id,
+    c.class_name,
+    COUNT(*) AS num_students_below_avg
+FROM
+    Classes c
+JOIN
+    Students st ON c.class_id = st.class_id
+JOIN
+    Scores sc ON st.student_id = sc.student_id
+JOIN
+    ClassAvgScores cas ON c.class_id = cas.class_id
+WHERE
+    sc.score < cas.avg_class_score
+GROUP BY
+    c.class_id, c.class_name;
